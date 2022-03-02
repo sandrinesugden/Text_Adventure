@@ -26,11 +26,4 @@ public class Item {
         return health;
     }
     
-    public int setDamage() {
-        return damage;
-    }
-    
-    public int getDamage() {
-        return damage;
-    }
 }
