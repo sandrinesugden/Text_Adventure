@@ -6,7 +6,7 @@ public class Room {
     private String name;
     private String longDescription;
     private String shortDescription;
-    private HashMap<String, Room> exits; 
+    private HashMap<String, Room> rooms; 
     private HashMap<String, Item> inventory;
     
     public Room (String name, String longDescription, String shortDescription) {
@@ -14,7 +14,7 @@ public class Room {
         this.longDescription = longDescription;
         this.shortDescription = shortDescription;
        
-        exits = new HashMap <>();        
+        rooms = new HashMap <>();        
         inventory = new HashMap <>();
     }
     
@@ -46,12 +46,12 @@ public class Room {
         return longDescription;
     }
     
-    public void setExit(String direction, Room neighbor) {
-        exits.put(direction, neighbor);
+    public void setRoom(String direction, Room neighbor) {
+        rooms.put(direction, neighbor);
     }
     
     public Room getExit(String direction) {
-        return exits.get(direction);
+        return rooms.get(direction);
     }
     
     public Item drinkItem(String key) {
@@ -70,9 +70,9 @@ public class Room {
         return returnString;
     }
     
-    public String getExit() {
-        String returnString = "Exits: ";
-        Set<String> keys = exits.keySet();
+    public String setRoom() {
+        String returnString = "Rooms: ";
+        Set<String> keys = rooms.keySet();
         
         for(String exit: keys) {
             returnString += "\"" + exit + "\" ";

@@ -4,6 +4,7 @@ public class Game {
     private Room currentRoom; 
     private Player player;
     private CLS cls_var;
+    private boolean lockPinkRoom = false;
     public Game() {
         parser = new Parser();
         player = new Player();
@@ -17,7 +18,7 @@ public class Game {
     
     public void printInformation() {
         System.out.println(currentRoom.getShortDescription());
-        System.out.println(currentRoom.getExit());
+        System.out.println(currentRoom.setRoom());
         System.out.println(currentRoom.getInventory());
         System.out.println(player.getInventory());
     }
@@ -36,16 +37,16 @@ public class Game {
         Item pinkDrink =  new Item ("pink drink", "description");
         Item blackDrink = new Item ("black drink", "description");
         
-        tower.setExit("hallway", hallway);
+        tower.setRoom("hallway", hallway);
         
-        hallway.setExit("tower", tower);
-        hallway.setExit("blue room", blueRoom);
-        hallway.setExit("pink room", pinkRoom);
-        hallway.setExit("green room", greenRoom);
+        hallway.setRoom("tower", tower);
+        hallway.setRoom("blue room", blueRoom);
+        hallway.setRoom("pink room", pinkRoom);
+        hallway.setRoom("green room", greenRoom);
         
-        blueRoom.setExit("hallway", hallway);
-        greenRoom.setExit("hallway", hallway);
-        pinkRoom.setExit("hallway", hallway);
+        blueRoom.setRoom("hallway", hallway);
+        greenRoom.setRoom("hallway", hallway);
+        pinkRoom.setRoom("hallway", hallway);
         
         greenRoom.setItem("key", itemKey);
         
@@ -104,57 +105,73 @@ public class Game {
                 drink(command);
                 break;
             case "help":
-                System.out.println("The command words in this game are go, grab, drop, look, speak, drink and help.The goal of the game is to drink the pink, green and blue potions.");
+                 help (command);
+                 break;
         }
     }
     
+        public void help(Command command) {
+        	if (!command.hasSecondWord()) {
+        		System.out.println("The command words in this game are go, grab, drop, look, speak, drink and help.The goal of the game is to drink the pink, green and blue potions.");
+        	}
+        	if(command.getSecondWord().equals("go")) {
+        		System.out.println("to travel type go and then where you want to go. You can only enter to the rooms listed under Rooms. ex: if under Rooms it says ‘hallway’ type go hallway.");
+        	}
+        	if(command.getSecondWord().equals("grab")) {
+        		System.out.println("to pick up items type grab and then what you want to grab. you can only grab items in the room inventory. copy down their names exactly except without quotations. ex: to grab green drink type grab greenDrink.");
+        	}
+        	if(command.getSecondWord().equals("drop")) {
+        		System.out.println("to drop items type drop and then what you want to grab. you can only drop items in the player inventory. copy down their names exactly except without quotations. ex: to drop green drink type drop greenDrink.");
+        	}
+        	if(command.getSecondWord().equals("look")) {
+        		System.out.println("use look to inspect items further. if you want to look at something type look and then what you want to look at.you can look at the room you are in and items in the room.");
+        	}
+        	if(command.getSecondWord().equals("drink")) {
+        		System.out.println("to drink things type in drink and then what you want to drink. you can only drink items that have already been grabbed and are in the player inventory and end in drink. ex: to drink greenDrink make sure it is in your player inventory and then type drink greenDrink.");
+        	}
+        }
     public void drink(Command command) {
         if (!command.hasSecondWord()) {
             System.out.println("drink what?");
             return;
         }
-        String item = command.getSecondWord();
-        Item itemToDrink = player.removeItem(item);
-        
+        String stringToDrink ="";
+       
 		if (!command.hasSecondWord()) {
-        	itemToDrink=command.getSecondWord();
+        	stringToDrink=command.getSecondWord();
          }
 		
          else if (command.hasSecondWord()) {
-        	 itemToDrink=command.getSecondWord()+command.getLine();
-      
-        	 if (itemToDrink == null) {
+        	 stringToDrink=command.getSecondWord()+command.getLine();
+         }
+  
+        	 if (stringToDrink == null) {
             System.out.println("you cannot drink that");
             return;
         }
-          
-            
+                      
         if(command.getSecondWord().equals("blackDrink")){
             player.adjustHealth(-100);
-           
+            player.removeItem("blackDrink");
+            System.out.println ("oh no! you drank the black drink and your health got to zero and you died! game over");
         }
         if (command.getSecondWord().equals("blueDrink")){
-            player.adjustHealth(30);
-            
+            player.adjustHealth(30);    
+            player.removeItem("blueDrink");
         }
         if (command.getSecondWord().equals("greenDrink")){
-            player.adjustHealth(30);
-            
+            player.adjustHealth(30);  
+            player.removeItem("greenDrink");
         }
         if (command.getSecondWord().equals("pinkDrink")){
-            player.adjustHealth(30);
-            
-        }
+            player.adjustHealth(30);  
+            player.removeItem("pinkDrink");
         }
 		if (player.getHealth() == 100) {
 			System.out.println("congrats, you survived! you were able to drink the green, blue and pink drink and restored your health to 100!");
 		}
-		if (player.getHealth() == 0) {
-			System.out.println ("oh no! you drank the black drink and your health got to zero and you died! game over");
-		}
-    	}
+    }
        
-
         public void look(Command command) {
         String printString = "looking at ";
         String thingToLook;
@@ -204,6 +221,9 @@ public class Game {
         else {
            player.setItem (item, itemToGrab);
         }
+        if(item.equals("key") ) {
+        	boolean lockPinkRoom = true;
+        }
     }
     
     public void drop(Command command) {
@@ -238,7 +258,10 @@ public class Game {
         }
         
         Room nextRoom = currentRoom.getExit(direction);
-        
+        if(direction.equals("pink room") && player.getItem("key") == null) {
+        	System.out.println("That room is locked");
+        	nextRoom = null;
+        }
         if(nextRoom == null) {
             System.out.println("you cannot go there");
             return;
@@ -247,7 +270,4 @@ public class Game {
            currentRoom = nextRoom; 
         }
     }   
-    public void lockRoom(boolean lock) {
-
-    }
 }
