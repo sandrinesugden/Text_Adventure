@@ -62,16 +62,21 @@ public class Game {
            cls_var.main(); 
         }
         catch (Exception e) {
-            System.out.println(e); 
+           System.out.println(e); 
         }
         
         printInformation();
         
     }
     
-    public void play() {
+    public boolean play() {
     while(true) {            
         Command command = parser.getCommand(); 
+        
+    while(player.getHealth()<=0 && player.getHealth() >=100) {
+        return false;
+        }
+    
         try {
            cls_var.main(); 
         }
@@ -153,7 +158,15 @@ public class Game {
         if(command.getSecondWord().equals("blackDrink")){
             player.adjustHealth(-100);
             player.removeItem("blackDrink");
-            System.out.println ("oh no! you drank the black drink and your health got to zero and you died! game over");
+            System.out.println ("oh no! you drank the black drink and your health tanked and you died!");
+            System.out.println("                                                   _ \r\n"
+            		+ "                                                  | |\r\n"
+            		+ "   __ _  __ _ _ __ ___   ___    _____   _____ _ __| |\r\n"
+            		+ "  / _` |/ _` | '_ ` _ \\ / _ \\  / _ \\ \\ / / _ \\ '__| |\r\n"
+            		+ " | (_| | (_| | | | | | |  __/ | (_) \\ V /  __/ |  |_|\r\n"
+            		+ "  \\__, |\\__,_|_| |_| |_|\\___|  \\___/ \\_/ \\___|_|  (_)\r\n"
+            		+ "   __/ |                                             \r\n"
+            		+ "  |___/                                              ");
         }
         if (command.getSecondWord().equals("blueDrink")){
             player.adjustHealth(30);    
@@ -169,6 +182,14 @@ public class Game {
         }
 		if (player.getHealth() == 100) {
 			System.out.println("congrats, you survived! you were able to drink the green, blue and pink drink and restored your health to 100!");
+			System.out.println("                               _       _ \r\n"
+					+ "                              (_)     | |\r\n"
+					+ "  _   _  ___  _   _  __      ___ _ __ | |\r\n"
+					+ " | | | |/ _ \\| | | | \\ \\ /\\ / / | '_ \\| |\r\n"
+					+ " | |_| | (_) | |_| |  \\ V  V /| | | | |_|\r\n"
+					+ "  \\__, |\\___/ \\__,_|   \\_/\\_/ |_|_| |_(_)\r\n"
+					+ "   __/ |                                 \r\n"
+					+ "  |___/                                  ");
 		}
     }
        
