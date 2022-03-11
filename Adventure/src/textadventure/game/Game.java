@@ -3,8 +3,6 @@ public class Game {
     private Parser parser;
     private Room currentRoom; 
     private Player player;
-    private CLS cls_var;
-    private boolean lockPinkRoom = false;
     public Game() {
         parser = new Parser();
         player = new Player();
@@ -16,6 +14,14 @@ public class Game {
         game.play();
     }
     
+    public boolean over() {
+    	if(player.getHealth()<=0 || player.getHealth()==100) {
+    		  return false;
+    	}
+    	else {
+    		return true;
+    	}
+    }
     public void printInformation() {
         System.out.println(currentRoom.getShortDescription());
         System.out.println(currentRoom.setRoom());
@@ -59,7 +65,7 @@ public class Game {
         currentRoom = tower;
         
         try {
-           cls_var.main(); 
+           //cls_var.main(); 
         }
         catch (Exception e) {
            System.out.println(e); 
@@ -69,25 +75,24 @@ public class Game {
         
     }
     
-    public boolean play() {
-    while(true) {            
-        Command command = parser.getCommand(); 
-        
-    while(player.getHealth()<=0 && player.getHealth() >=100) {
-        return false;
-        }
-    
+    public void play() {
+    while(over()) {            
+        Command command = parser.getCommand();     
         try {
-           cls_var.main(); 
-        }
+           //cls_var.main(); 
+        }        
         catch (Exception e) {
             System.out.println(e); 
-        }
+        }     
         processCommand(command);
-        printInformation();   
-        }
+        if(over()) {		
+        printInformation();
+        }	      
+      }
     }
-    
+ 
+
+     
         public void processCommand(Command command) {
             String commandWord = command.getCommandWord().toLowerCase();
         switch(commandWord) {
@@ -243,7 +248,6 @@ public class Game {
            player.setItem (item, itemToGrab);
         }
         if(item.equals("key") ) {
-        	boolean lockPinkRoom = true;
         }
     }
     

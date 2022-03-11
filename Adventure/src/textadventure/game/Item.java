@@ -2,7 +2,6 @@ package textadventure.game;
 public class Item {
     private String name;
     private String description;
-    int damage;
     int health;
     
     public Item(String name, String description) {
